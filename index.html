@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#малюваня</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            overflow-x: hidden;
+            position: relative;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='%2300ff00' d='M16 3C8.832 3 3 8.832 3 16s5.832 13 13 13 13-5.832 13-13S23.168 3 16 3zm0 2c6.086 0 11 4.914 11 11s-4.914 11-11 11S5 22.086 5 16 9.914 5 16 5z'/%3E%3Cpath fill='%2300ff00' d='M16 10c-3.314 0-6 2.686-6 6s2.686 6 6 6 6-2.686 6-6-2.686-6-6-6z'/%3E%3C/svg%3E"), auto;
+        }
+
+        /* Matrix эффект на заднем плане */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Заголовок профиля */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 3px solid #0f0;
+            position: relative;
+            overflow: hidden;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 100, 255, 0.1) 0%, transparent 50%);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 0, 0.5),
+                inset 0 0 30px rgba(0, 255, 0, 0.2);
+            animation: glitch 5s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            5% { transform: translate(-2px, 2px); }
+            10% { transform: translate(-2px, -2px); }
+            15% { transform: translate(2px, 2px); }
+            20% { transform: translate(2px, -2px); }
+            50% { transform: translate(0); }
+        }
+
+        .profile-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.4), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .username {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            text-shadow: 
+                0 0 10px #0f0,
+                0 0 20px #0f0,
+                0 0 30px #0f0,
+                0 0 40px #ff0000,
+                0 0 70px #ff0000;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            letter-spacing: 5px;
+            animation: text-flicker 3s infinite alternate;
+            position: relative;
+        }
+
+        @keyframes text-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 
+                    0 0 10px #0f0,
+                    0 0 20px #0f0,
+                    0 0 30px #0f0,
+                    0 0 40px #ff0000,
+                    0 0 70px #ff0000;
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+                opacity: 0.9;
+            }
+        }
+
+        .status {
+            font-size: 1.8rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            font-family: 'Press Start 2P', cursive;
+            animation: status-pulse 2s infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Секции профиля */
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 2px solid #0f0;
+            position: relative;
+            background-color: rgba(0, 10, 0, 0.7);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .section:hover {
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #0f0, #ff0000, #0f0);
+            animation: border-flow 3s linear infinite;
+        }
+
+        @keyframes border-flow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff0000;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px #ff0000;
+            animation: title-shake 5s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes title-shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .info-item {
+            padding: 15px;
+            border: 1px solid #0f0;
+            background-color: rgba(0, 20, 0, 0.5);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .info-item:hover {
+            background-color: rgba(20, 0, 0, 0.5);
+            border-color: #ff0000;
+            transform: scale(1.02);
+        }
+        
+        .info-item h3 {
+            color: #0f0;
+            margin-bottom: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+        }
+
+        .info-item p {
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        /* Кнопки */
+        .btn-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin: 15px;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-link::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.4), transparent);
+            transition: all 0.5s;
+            z-index: -1;
+        }
+
+        .btn-link:hover {
+            background-color: rgba(255, 0, 0, 0.2);
+            box-shadow: 
+                0 0 20px #ff0000,
+                inset 0 0 20px rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border-color: #ff0000;
+            transform: scale(1.1);
+        }
+
+        .btn-link:hover::before {
+            left: 100%;
+        }
+
+        /* Анимации для кнопок */
+        .btn-explode:active {
+            animation: explode 0.5s ease;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            50% { transform: scale(1.2); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-glitch:active {
+            animation: glitch-effect 0.3s linear;
+        }
+
+        @keyframes glitch-effect {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            20% { transform: translate(-5px, 2px); filter: hue-rotate(90deg); }
+            40% { transform: translate(3px, -3px); filter: hue-rotate(180deg); }
+            60% { transform: translate(-3px, 4px); filter: hue-rotate(270deg); }
+            80% { transform: translate(2px, -2px); filter: hue-rotate(300deg); }
+            100% { transform: translate(0); filter: hue-rotate(360deg); }
+        }
+
+        .btn-spin:active {
+            animation: spin 0.5s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        /* Футер */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            border-top: 2px solid #0f0;
+            font-size: 1.1rem;
+            color: #0a0;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 50%);
+            animation: pulse 4s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        /* Дополнительные эффекты */
+        .floating-text {
+            position: absolute;
+            color: rgba(0, 255, 0, 0.3);
+            font-size: 1.5rem;
+            z-index: -1;
+            animation: float 20s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .corner-decoration {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid #0f0;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .corner-tl {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-tr {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner-br {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Всплывающие уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #0f0;
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .username {
+                font-size: 2.5rem;
+            }
+            .status {
+                font-size: 1.2rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .btn-link {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Эффект мигающего курсора */
+        .typing::after {
+            content: "|";
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Эффект загрузки */
+        .loading-bar {
+            height: 5px;
+            background: linear-gradient(90deg, #0f0, #ff0000);
+            width: 0%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            animation: loading 3s ease-in-out;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-bar"></div>
+    
+    <!-- Matrix эффект на заднем плане -->
+    <canvas class="matrix-bg" id="matrixCanvas"></canvas>
+
+    <!-- Уведомления -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Плавающий текст -->
+    <div id="floatingTexts"></div>
+
+    <div class="container">
+        <!-- Угловые декорации -->
+        <div class="corner-decoration corner-tl"></div>
+        <div class="corner-decoration corner-tr"></div>
+        <div class="corner-decoration corner-bl"></div>
+        <div class="corner-decoration corner-br"></div>
+
+        <!-- Заголовок профиля -->
+        <header class="profile-header" id="mainHeader">
+            <h1 class="username">КАПУСТА</h1>
+            <p class="status">Я ДОЛБОЕБ!!! #йоу</p>
+            <p class="typing">ПОШЛИ ДАЛЬШЕ РЖАТЬ 🤣</p>
+        </header>
+
+        <!-- Секция деятельности -->
+        <section class="section" id="activitySection">
+            <h2 class="section-title" id="activityTitle">ДЕЯТЕЛЬНОСТЬ</h2>
+            
+            <div class="info-item" id="yoyItem">
+                <h3>#йоу:</h3>
+                <p>ЙОУ Я ПО ЖИЗНИ ЕБЛАНЮ #йоу</p>
+            </div>
+            
+            <div class="info-item" id="rulesItem">
+                <h3>ПРАВИЛА:</h3>
+                <p>мне похуй абсолютно чё вы там чё почем хоккей с мячом #мяч</p>
+            </div>
+            
+            <div class="info-item" id="philosophyItem">
+                <h3>ФИЛОСОФИЯ:</h3>
+                <p>хахаххахах ахахаххахаа ХАХАХ АХХАХАХАХАХАХАХАХАХХ ХАХАХХАХА</p>
+            </div>
+        </section>
+
+        <!-- Секция связи -->
+        <section class="section" id="contactSection">
+            <h2 class="section-title" id="contactTitle">СВЯЗЬ</h2>
+            
+            <div class="btn-container">
+                <a href="https://t.me/VZcabbage" target="_blank" class="btn-link btn-explode">
+                    TELEGRAM-КАНАЛ
+                </a>
+                
+                <a href="#" class="btn-link btn-glitch" id="randomAction">
+                    СЛУЧАЙНОЕ ДЕЙСТВИЕ
+                </a>
+                
+                <a href="#" class="btn-link btn-spin" id="chaosMode">
+                    РЕЖИМ ХАОСА
+                </a>
+            </div>
+            
+            <div class="info-item" id="warningItem">
+                <h3>ПРЕДУПРЕЖДЕНИЕ:</h3>
+                <p>ответственность за вашу девственность и мозги не беру</p>
+            </div>
+        </section>
+
+        <!-- Секция цитат -->
+        <section class="section" id="quotesSection">
+            <h2 class="section-title" id="quotesTitle">ЦИТАТЫ ДНЯ</h2>
+            
+            <div class="info-item" id="quote1">
+                <p>"виторино] я виторинокин"</p>
+            </div>
+            
+            <div class="info-item" id="quote2">
+                <p>"виторино] я ВИТОРИНО"</p>
+            </div>
+            
+            <div class="info-item" id="quote3">
+                <p>"виторино] я виторино"</p>
+            </div>
+        </section>
+
+        <!-- Футер -->
+        <footer class="footer" id="mainFooter">
+            <p>хей меня Саша кстати зовут))</p>
+            <p>приятно познакомиться)))</p>
+            <p>@Dicko1Prim 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Matrix эффект
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Расширенный набор символов
+        const chars = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?/~";
+        const charArray = chars.split("");
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for(let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "#0f0";
+            ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
+            
+            for(let i = 0; i < drops.length; i++) {
+                // Случайный цвет для некоторых символов
+                if (Math.random() > 0.98) {
+                    ctx.fillStyle = "#ff0000";
+                } else if (Math.random() > 0.95) {
+                    ctx.fillStyle = "#00ffff";
+                } else {
+                    ctx.fillStyle = "#0f0";
+                }
+                
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 35);
+        
+        // Адаптация размера canvas при изменении размера окна
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Создание плавающего текста
+        const floatingTexts = [
+            "МОРАЛФАГИЯ", "ХАОС", "АНИМАЦИЯ", "ПИДОРСТВО", "КАПУСТА", 
+            "ДОЛБОЕБ", "MATRIX", "ВАЙБ", "ТРЭШ", "УГАР", "АНАРХИЯ"
+        ];
+        
+        const floatingContainer = document.getElementById('floatingTexts');
+        
+        function createFloatingText() {
+            const textElement = document.createElement('div');
+            textElement.className = 'floating-text';
+            textElement.textContent = floatingTexts[Math.floor(Math.random() * floatingTexts.length)];
+            textElement.style.left = Math.random() * 100 + 'vw';
+            textElement.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            textElement.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            floatingContainer.appendChild(textElement);
+            
+            // Удаляем элемент после завершения анимации
+            setTimeout(() => {
+                if (textElement.parentNode) {
+                    textElement.parentNode.removeChild(textElement);
+                }
+            }, 30000);
+        }
+        
+        // Создаем плавающий текст каждые 2 секунды
+        setInterval(createFloatingText, 2000);
+        
+        // Функция показа уведомления
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Случайное действие
+        document.getElementById('randomAction').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const actions = [
+                "ВЗЛОМ ЖОПЫ... УСПЕШНО!",
+                "АКТИВАЦИЯ РЕЖИМА ДОЛБОЕБА...",
+                "ЗАГРУЗКА МОРАЛФАГИИ... 100%",
+                "ПЕРЕЗАПУСК МАТРИЦЫ...",
+                "ОБНАРУЖЕН ПИДОР... УНИЧТОЖЕНИЕ...",
+                "ХУЙНЯ ПРОИСХОДИТ... НОРМАЛЬНО...",
+                "ЙОУУУУ ЭТО ЖЕСТКО!",
+                "АХАХАХАХАХА ПИЗДЕЦ!!!",
+                "МАЛЮВАНЯЯЯЯЯЯЯЯЯЯ!!!",
+                "ХУЙНЯ АКТИВИРОВАНА!"
+            ];
+            
+            const randomAction = actions[Math.floor(Math.random() * actions.length)];
+            showNotification(randomAction);
+            
+            // Добавляем визуальный эффект
+            document.body.style.background = "radial-gradient(circle, #ff0000, #000000)";
+            setTimeout(() => {
+                document.body.style.background = "#000";
+            }, 500);
+        });
+        
+        // Режим хаоса
+        let chaosMode = false;
+        document.getElementById('chaosMode').addEventListener('click', function(e) {
+            e.preventDefault();
+            chaosMode = !chaosMode;
+            
+            if (chaosMode) {
+                document.body.style.animation = "chaos 0.1s infinite";
+                document.getElementById('chaosMode').textContent = "ВЫКЛЮЧИТЬ ХАОС";
+                showNotification("ХАОС АКТИВИРОВАН! ГОТОВЬТЕСЬ ПИДОРКИ!");
+                
+                // Добавляем стиль для хаоса
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    @keyframes chaos {
+                        0% { filter: hue-rotate(0deg) invert(0); transform: scale(1); }
+                        25% { filter: hue-rotate(90deg) invert(0.1); transform: scale(1.01); }
+                        50% { filter: hue-rotate(180deg) invert(0.2); transform: scale(1); }
+                        75% { filter: hue-rotate(270deg) invert(0.1); transform: scale(0.99); }
+                        100% { filter: hue-rotate(360deg) invert(0); transform: scale(1); }
+                    }
+                `;
+                document.head.appendChild(style);
+            } else {
+                document.body.style.animation = "none";
+                document.getElementById('chaosMode').textContent = "РЕЖИМ ХАОСА";
+                showNotification("ХАОС ОСТАНОВЛЕН. ПИЗДЕЦ ТЫ...");
+            }
+        });
+
+        // Интерактивность для всех элементов
+
+        // Заголовок профиля
+        document.getElementById('mainHeader').addEventListener('click', function() {
+            showNotification("ЙОУ! ЭТО ЖЕ КАПУСТА! ДОЛБОЕБ АКТИВИРОВАН!");
+            this.style.animation = "glitch-effect 0.5s linear";
+            setTimeout(() => {
+                this.style.animation = "glitch 5s infinite";
+            }, 500);
+        });
+
+        // Секция деятельности
+        document.getElementById('activityTitle').addEventListener('click', function() {
+            showNotification("ДЕЯТЕЛЬНОСТЬ: ПРОСТО ЕБЛАНЮ ПО ЖИЗНИ!");
+            this.style.color = this.style.color === 'yellow' ? '#ff0000' : 'yellow';
+        });
+
+        // Элементы деятельности
+        document.getElementById('yoyItem').addEventListener('click', function() {
+            showNotification("ЙОУУУУУУУУУ!!! #йоу");
+            this.style.transform = "rotate(5deg)";
+            setTimeout(() => {
+                this.style.transform = "scale(1.02)";
+            }, 300);
+        });
+
+        document.getElementById('rulesItem').addEventListener('click', function() {
+            showNotification("ПОШЕЛ НАХУЙ");
+            this.style.background = "rgba(255, 0, 0, 0.3)";
+            setTimeout(() => {
+                this.style.background = "rgba(0, 20, 0, 0.5)";
+            }, 1000);
+        });
+
+        document.getElementById('philosophyItem').addEventListener('click', function() {
+            showNotification("ХАХАХАХАХА ФИЛОСОФИЯ ДОЛБОЕБА!");
+            const texts = ["ХАХАХАХАХА", "АХАХАХАХАХ", "ЙОУУУУ", "ПИЗДЕЦ", "ВiТОРiНi"];
+            this.querySelector('p').textContent = texts[Math.floor(Math.random() * texts.length)] + " ".repeat(10);
+        });
+
+        // Цитаты
+        document.getElementById('quote1').addEventListener('click', function() {
+            showNotification("ПИЗДА АКТИВИРОВАНА!");
+            this.style.animation = "shake 0.5s ease";
+            setTimeout(() => {
+                this.style.animation = "";
+            }, 500);
+        });
+
+        document.getElementById('quote2').addEventListener('click', function() {
+            showNotification("ГАВНО");
+            this.style.fontSize = "1.5rem";
+            this.style.fontWeight = "bold";
+            setTimeout(() => {
+                this.style.fontSize = "1.1rem";
+                this.style.fontWeight = "normal";
+            }, 1000);
+        });
+
+        document.getElementById('quote3').addEventListener('click', function() {
+            showNotification("#йоу!");
+            this.style.transform = "scale(1.3) rotate(10deg)";
+            setTimeout(() => {
+                this.style.transform = "scale(1.02)";
+            }, 300);
+        });
+
+        // Предупреждение
+        document.getElementById('warningItem').addEventListener('click', function() {
+            showNotification("ХАХХА ЛОШОК!");
+            this.style.border = "3px solid #ff0000";
+            this.style.boxShadow = "0 0 20px #ff0000";
+            setTimeout(() => {
+                this.style.border = "1px solid #0f0";
+                this.style.boxShadow = "none";
+            }, 1000);
+        });
+
+        // Угловые декорации
+        document.querySelectorAll('.corner-decoration').forEach(corner => {
+            corner.addEventListener('click', function() {
+                showNotification("я заебался чето придумывать!");
+                this.style.borderColor = "#ff0000";
+                this.style.transform = "rotate(45deg)";
+                setTimeout(() => {
+                    this.style.borderColor = "#0f0";
+                    this.style.transform = "rotate(0deg)";
+                }, 500);
+            });
+        });
+
+        // Футер
+        document.getElementById('mainFooter').addEventListener('click', function() {
+            showNotification("САША ПРИВЕТСТВУЕТ ТЕБЯ, ДОЛБОЕБ!");
+            this.style.background = "rgba(255, 0, 0, 0.2)";
+            setTimeout(() => {
+                this.style.background = "";
+            }, 1000);
+        });
+
+        // Эффект печатающего текста
+        const typingElement = document.querySelector('.typing');
+        const text = typingElement.textContent;
+        typingElement.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                typingElement.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            } else {
+                typingElement.classList.add('typing');
+            }
+        }
+        
+        // Запускаем эффект печати после загрузки
+        window.addEventListener('load', function() {
+            typeWriter();
+            
+            // Убираем полосу загрузки
+            setTimeout(() => {
+                document.querySelector('.loading-bar').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
